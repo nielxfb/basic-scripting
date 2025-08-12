@@ -16,6 +16,10 @@ print() {
 }
 
 cleanup() {
+	sudo systemctl restart apache2
+	sudo systemctl restart mysql
+
+	sudo cp "$CONF_FILE.bak" "$CONF_FILE"
 	sudo rm -rf $DIR
 	sudo rm -rf $TARGET
 	sudo mysql -e "DROP DATABASE IF EXISTS $DB_NAME;"
@@ -74,6 +78,7 @@ echo ""
 print "Configuring Apache2.."
 sudo mv $DIR $TARGET
 
+sudo cp  "$CONF_FILE" "$CONF_FILE.bak"
 sudo sed -i "s|^\(\s*DocumentRoot\s*\).*|\1$TARGET|" "$CONF_FILE"
 sudo systemctl reload apache2
 
